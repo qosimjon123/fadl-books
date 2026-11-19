@@ -102,7 +102,7 @@ class IntegrationTestUpstreamContract(IntegrationTestCase):
 				self.assertEqual(ours(**args), native_fn(**args), f"{name} diverged from native")
 
 	def test_frontend_fork_markers_survived(self):
-		root = Path(frappe.get_app_path("frappe_books")) / "frontend"
+		root = Path(frappe.get_app_path("frappe_books")).parent / "frontend"
 		for rel, markers in FRONTEND_MARKERS.items():
 			text = (root / rel).read_text()
 			for marker in markers:
