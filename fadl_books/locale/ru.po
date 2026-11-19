@@ -6923,7 +6923,7 @@ msgstr "Выплата"
 
 #: frontend/src/pages/POS/MobilePayment.vue:204
 msgid "Pay & print"
-msgstr "Оплатить и распечатать"
+msgstr "Оплатить и распеч."
 
 #. Label of the pay_button_colour (Color) field in DocType 'Books Defaults'
 #. Label of the pay_button_colour (Color) field in DocType 'Books POS Profile'
@@ -6934,7 +6934,7 @@ msgstr "Цвет кнопки «Оплатить»"
 
 #: frontend/src/pages/POS/PaymentModal.vue:138
 msgid "Pay and print"
-msgstr "Оплатить и распечатать"
+msgstr "Оплатить и распеч."
 
 #: frontend/src/components/POS/POSInvoiceActions.vue:45
 #: frontend/src/pages/POS/MobilePOSCart.vue:171
