@@ -2677,6 +2677,14 @@ msgstr "Пользовательские поля"
 msgid "Custom hex"
 msgstr "Свой HEX-код"
 
+#: frontend/src/pages/Dashboard/FadlPeriodSelector.vue
+msgid "Custom period"
+msgstr "Произвольный период"
+
+#: fadl_books/periods.py
+msgid "Custom range"
+msgstr "Произвольный диапазон"
+
 #. Label of the customer (Link) field in DocType 'Books Delivery Note'
 #. Label of the customer (Data) field in DocType 'Books Item Enquiry'
 #. Label of the customer (Link) field in DocType 'Books Loyalty Point Entry'
@@ -4212,6 +4220,10 @@ msgstr "Бесплатный товар"
 msgid "Freight and Forwarding Charges"
 msgstr "Фрахт и транспортные расходы"
 
+#: frontend/src/pages/Dashboard/FadlPeriodSelector.vue
+msgid "From"
+msgstr "С"
+
 #. Label of the from_date (Date) field in DocType 'Books Loyalty Program'
 #: frappe_books/frappe_books/doctype/books_loyalty_program/books_loyalty_program.json:38
 #: frontend/reports/GeneralLedger/GeneralLedger.ts:125
@@ -4823,6 +4835,10 @@ msgstr "Некорректный код HSN."
 msgid "Invalid condition for {0}"
 msgstr "Недопустимое условие для {0}"
 
+#: fadl_books/periods.py
+msgid "Invalid custom period: {0}"
+msgstr "Неверный произвольный период: {0}"
+
 #: frontend/src/frappe/validation.ts:23
 #, python-brace-format
 msgid "Invalid email: {0}"
@@ -5400,6 +5416,10 @@ msgstr "Подпись"
 msgid "Landscape"
 msgstr "Альбомная"
 
+#: fadl_books/periods.py
+msgid "Last 3 days"
+msgstr "Последние 3 дня"
+
 #: frontend/src/components/Report/filterToolbar.ts:83
 msgid "Last fiscal year"
 msgstr "Прошлый финансовый год"
@@ -5407,6 +5427,18 @@ msgstr "Прошлый финансовый год"
 #: frontend/src/components/Report/filterToolbar.ts:75
 msgid "Last month"
 msgstr "Прошлый месяц"
+
+#: fadl_books/periods.py
+msgid "Last quarter"
+msgstr "Прошлый квартал"
+
+#: fadl_books/periods.py
+msgid "Last week"
+msgstr "Прошлая неделя"
+
+#: fadl_books/periods.py
+msgid "Last year"
+msgstr "Прошлый год"
 
 #. Label of the lead_name (Link) field in DocType 'Books Customer'
 #. Option for the 'Status' (Select) field in DocType 'Books Lead'
@@ -7109,6 +7141,10 @@ msgstr "Периодичность"
 #: frappe_books/frappe_books/doctype/books_print_settings/books_print_settings.json:57
 msgid "Phone"
 msgstr "Телефон"
+
+#: frontend/src/pages/Dashboard/FadlPeriodSelector.vue
+msgid "Pick both dates."
+msgstr "Укажите обе даты."
 
 #: frontend/src/pages/PrintView/ReportPrintView.vue:174
 msgid "Pick columns"
@@ -9730,6 +9766,10 @@ msgstr "Внесённая сумма. Наличные сверх суммы к
 msgid "The chart of accounts has no {0} root account."
 msgstr "В плане счетов нет корневого счёта {0}."
 
+#: fadl_books/periods.py
+msgid "The custom period starts after it ends: {0}"
+msgstr "Начало произвольного периода позже его окончания: {0}"
+
 #. Description of the 'Barcode Prefix' (Int) field in DocType 'Books POS
 #. Settings'
 #: frappe_books/frappe_books/doctype/books_pos_settings/books_pos_settings.json:80
@@ -9770,6 +9810,10 @@ msgstr "Сервер столкнулся с ошибкой ({0})."
 #: frappe_books/commerce/pos.py:145
 msgid "The standard Cash account is required for POS shifts."
 msgstr "Для смен кассира требуется стандартный счёт «Касса»."
+
+#: frontend/src/pages/Dashboard/FadlPeriodSelector.vue
+msgid "The start date is after the end date."
+msgstr "Дата начала позже даты окончания."
 
 #: frontend/src/utils/appMenu.ts:40
 msgid "Theme"
@@ -9828,6 +9872,10 @@ msgstr "Этот месяц"
 msgid "This quarter"
 msgstr "Этот квартал"
 
+#: fadl_books/periods.py
+msgid "This week"
+msgstr "Эта неделя"
+
 #: frontend/src/pages/Dashboard/PeriodSelector.vue:61
 msgid "This year"
 msgstr "Этот год"
@@ -9855,6 +9903,10 @@ msgstr "Часовой пояс"
 #: frappe_books/frappe_books/doctype/books_sales_taxes_and_charges_template/books_sales_taxes_and_charges_template.json:24
 msgid "Title"
 msgstr "Заголовок"
+
+#: frontend/src/pages/Dashboard/FadlPeriodSelector.vue
+msgid "To"
+msgstr "По"
 
 #. Option for the 'Status' (Select) field in DocType 'Books Delivery Note'
 #. Option for the 'Status' (Select) field in DocType 'Books Purchase Receipt'
@@ -9886,6 +9938,10 @@ msgstr "По год"
 #: frappe_books/reports/periods.py:26
 msgid "To Year cannot be before From Year."
 msgstr "Конечный год не может быть раньше начального."
+
+#: fadl_books/periods.py
+msgid "Today"
+msgstr "Сегодня"
 
 #: frontend/src/components/ShortcutsHelper.vue:87
 msgid "Toggle Linked Entries widget, not available in Quick Edit view."
@@ -10616,6 +10672,10 @@ msgstr "Жёлтый"
 #: frontend/src/utils/ui.ts:597
 msgid "Yes"
 msgstr "Да"
+
+#: fadl_books/periods.py
+msgid "Yesterday"
+msgstr "Вчера"
 
 #: frappe_books/www/books.py:13
 msgid "You are not permitted to access this page."
