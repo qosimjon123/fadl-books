@@ -230,7 +230,15 @@ after_install = "fadl_books.install.execute"
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "fadl_books.event.get_events"
 # }
-#
+# Overriding Methods
+# ------------------------------
+override_whitelisted_methods = {
+	"frappe_books.reports.dashboard.get_cashflow": "fadl_books.dashboard_overrides.get_cashflow",
+	"frappe_books.reports.dashboard.get_profit_and_loss": "fadl_books.dashboard_overrides.get_profit_and_loss",
+	"frappe_books.reports.dashboard.get_top_expenses": "fadl_books.dashboard_overrides.get_top_expenses",
+	"frappe_books.reports.dashboard.get_invoice_summary": "fadl_books.dashboard_overrides.get_invoice_summary",
+}
+
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
