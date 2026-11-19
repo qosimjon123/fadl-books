@@ -132,3 +132,4 @@ def simplify_item_form():
 	_setter("Books Item", "inventory_section_break_15", "depends_on", "eval:0", "Code")
 	_setter("Books Item", "taxes_section_break", "depends_on", "eval:0", "Code")
 	_setter("Books Item", "taxes", "hidden", 1, "Check")
+	_setter("Books Item", "item_code", "in_list_view", 1, "Check")
