@@ -1,7 +1,8 @@
 import frappe
 from frappe.query_builder import DocType
 from frappe.query_builder.functions import Count, Sum
-from frappe_books.reports.dashboard import get_period_dates
+
+from fadl_books.periods import get_period_dates
 
 GL = DocType("Books GL Entry")
 ACCOUNT = DocType("Books Account")
@@ -10,16 +11,18 @@ PE = DocType("Books Payment Entry")
 
 
 @frappe.whitelist()
-def get_dashboard_cards(period: str = "This Year") -> list[dict]:
+def get_dashboard_cards(period: str = "Today") -> list[dict]:
 	"""Enabled dashboard cards with their metrics, in row order."""
 	settings = frappe.get_single("Books Dashboard Settings")
+	from_date, to_date = get_period_dates(period)
 	cards = []
 	for row in settings.cards:  # already ordered by idx
 		if not row.enabled:
 			continue
 		card = {"name": row.name, "title": row.title, "route": row.route,
-		        "color": row.color,  
-			    "value": None, "count": 0, "format": "currency"}
+		        "color": row.color, "metric_method": row.metric_method,
+		        "from_date": from_date, "to_date": to_date,
+		        "value": None, "count": 0, "format": "currency"}
 		method = row.metric_method
 		# только whitelisted-функции из вашего приложения
 		if method and method.startswith("fadl_books."):
