@@ -1,0 +1,134 @@
+import json
+
+import frappe
+
+
+def execute():
+	setup_currency()
+	hide_naming_series_fields()
+	hide_default_account_fields()
+	hide_tax_fields()
+	simplify_item_form()
+	tidy_date_fields()
+	
+
+def setup_currency():
+	"""RUB is created at site install without a symbol, so set ₽ here."""
+	currency = frappe.get_doc("Currency", "RUB")
+	currency.symbol = "₽"
+	currency.fraction = "коп."
+	currency.symbol_on_right = 1
+	currency.save()
+
+
+def hide_naming_series_fields():
+	"""Safe to hide: SeriesNamingMixin fills naming_series from Books Defaults on save.
+	For simpllicty for mobile users, we don't want to show the field in the form."""
+	frappe.make_property_setter(
+		{
+			"fieldname": "naming_series",
+			"property": "hidden",
+			"value": 1,
+			"property_type": "Check",
+		},
+		validate_fields_for_doctype=False,
+	)
+
+
+def _setter(doctype, fieldname, prop, value, property_type):
+	frappe.make_property_setter(
+		{
+			"doctype": doctype,
+			"fieldname": fieldname,
+			"property": prop,
+			"value": value,
+			"property_type": property_type,
+		},
+		validate_fields_for_doctype=False,
+	)
+
+
+def hide_default_account_fields():
+	"""Safe to hide: controllers fill these from party, item and company defaults.
+	Payment accounts stay visible for Internal Transfer: its destination is chosen by hand."""
+	for doctype, fieldname in (
+		("Books Sales Invoice", "debit_to"),
+		("Books Purchase Invoice", "credit_to"),
+		("Books Sales Invoice Item", "income_account"),
+		("Books Purchase Invoice Item", "expense_account"),
+		("Books Payment Entry Deduction", "account"),
+	):
+		_setter(doctype, fieldname, "hidden", 1, "Check")
+	for fieldname in ("paid_from", "paid_to"):
+		_setter(
+			"Books Payment Entry",
+			fieldname,
+			"depends_on",
+			"eval:doc.payment_type != 'Internal Transfer'",
+			"Code",
+		)
+
+
+def hide_tax_fields():
+	"""No tax templates exist on this site, so taxes compute to zero; the fields are noise.
+	A template added later still auto-applies to new documents (taxes.py fills it in)."""
+	for doctype in ("Books Sales Invoice", "Books Purchase Invoice", "Books Quotation"):
+		# eval:0 on the break hides the whole Taxes section, header included, in Books and Desk.
+		_setter(doctype, "taxes_section", "depends_on", "eval:0", "Code")
+		for fieldname in ("taxes_and_charges", "taxes", "total_taxes_and_charges", "discount_after_tax"):
+			_setter(doctype, fieldname, "hidden", 1, "Check")
+	for doctype in ("Books Sales Invoice Item", "Books Purchase Invoice Item", "Books Quotation Item"):
+		for fieldname in ("item_tax_template", "gst_hsn_code"):
+			_setter(doctype, fieldname, "hidden", 1, "Check")
+
+
+DATE_AT_END = {
+	"Books Sales Invoice": "posting_date",
+	"Books Purchase Invoice": "posting_date",
+	"Books Payment Entry": "posting_date",
+	"Books Journal Entry": "posting_date",
+	"Books Delivery Note": "posting_date",
+	"Books Purchase Receipt": "posting_date",
+	"Books Stock Entry": "posting_date",
+	"Books Quotation": "transaction_date",
+}
+
+
+def tidy_date_fields():
+	"""Dates default to Today, so they go to the form's end; never hidden.
+	The end means the end of the MAIN tab: past the first Tab Break lies the
+	service Settings tab, and a date there costs an extra tap on mobile.
+	Dates without a default (reference, clearance, cheque) stay put.
+	Order is overridden the way Customize Form does it: a DocType-level field_order
+	setter, because meta.sort_fields() renumbers per-field idx and ignores such setters."""
+	for doctype, fieldname in DATE_AT_END.items():
+		fields = frappe.get_meta(doctype).fields
+		order = [df.fieldname for df in fields]
+		if fieldname not in order:
+			continue
+		order.remove(fieldname)
+		tab = next(
+			(i for i, df in enumerate(fields) if df.fieldtype == "Tab Break"),
+			len(fields),
+		)
+		order.insert(sum(1 for df in fields[:tab] if df.fieldname != fieldname), fieldname)
+		frappe.make_property_setter(
+			{
+				"doctype": doctype,
+				"doctype_or_field": "DocType",
+				"property": "field_order",
+				"value": json.dumps(order),
+			},
+			validate_fields_for_doctype=False,
+		)
+
+
+def simplify_item_form():
+	"""We sell stocked products only: type and the inventory block are noise.
+	The item's own Taxes table goes the way of invoice taxes."""
+	_setter("Books Item", "item_type", "hidden", 1, "Check")
+	_setter("Books Item", "is_stock_item", "default", "1", "Data")
+	_setter("Books Item", "is_stock_item", "hidden", 1, "Check")
+	_setter("Books Item", "inventory_section_break_15", "depends_on", "eval:0", "Code")
+	_setter("Books Item", "taxes_section_break", "depends_on", "eval:0", "Code")
+	_setter("Books Item", "taxes", "hidden", 1, "Check")

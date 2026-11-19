@@ -108,7 +108,7 @@ use_json_request_body = True
 # ------------
 
 # before_install = "fadl_books.install.before_install"
-# after_install = "fadl_books.install.after_install"
+after_install = "fadl_books.install.execute"
 
 # Uninstallation
 # ------------
