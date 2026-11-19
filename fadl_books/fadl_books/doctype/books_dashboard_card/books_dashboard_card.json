@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "creation": "2026-11-18 21:04:42.108338",
+ "description": "Dashboard card row for Books Dashboard Settings: title, semantic color token, route and metric method.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "icon",
+  "route",
+  "color",
+  "metric_method",
+  "enabled"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "description": "Icon name for the frontend, e.g. i-lucide-shopping-cart",
+   "fieldname": "icon",
+   "fieldtype": "Data",
+   "label": "Icon"
+  },
+  {
+   "description": "Frontend route or report name the card opens on click",
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "description": "Dotted path of a whitelisted read-only function returning the card metrics, e.g. {value, count}",
+   "fieldname": "metric_method",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Metric Method"
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Enabled"
+  },
+  {
+   "description": "Semantic color token; 'dynamic' renders green for positive values and red for negative",
+   "fieldname": "color",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Color",
+   "options": "blue\ngreen\nred\ngray\norange\ndynamic"
+  }
+ ],
+ "grid_page_length": 50,
+ "istable": 1,
+ "link_display_mode": "Search",
+ "links": [],
+ "modified": "2026-11-18 22:20:51.549696",
+ "modified_by": "Administrator",
+ "module": "Fadl Books",
+ "name": "Books Dashboard Card",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
