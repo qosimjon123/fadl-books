@@ -34,7 +34,7 @@ FRONTEND_MARKERS = {
 		"period: 'Today'",
 	),
 	"src/mobile/MobileTabs.vue": ("from './fadlTabs'",),
-	"src/router.ts": ("FadlMore/FadlMorePage.vue",),
+	"src/router.ts": ("fadlRoutes",),
 }
 FRONTEND_FILES = (
 	"src/pages/Dashboard/FadlPeriodSelector.vue",
