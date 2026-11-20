@@ -11,6 +11,7 @@ def execute():
 	simplify_item_form()
 	tidy_date_fields()
 	add_stock_receipt_basis()
+	tidy_stock_entry_rows()
 	
 
 def setup_currency():
@@ -152,13 +153,62 @@ def add_stock_receipt_basis():
 					"fieldname": "receipt_basis",
 					"label": "Receipt Basis",
 					"fieldtype": "Select",
-					"options": "Opening Stock\nStock Surplus",
-					"default": "Stock Surplus",
-					"depends_on": "eval:doc.purpose=='Material Receipt'",
+					"options": "\nOpening Stock\nStock Surplus",
+					"default": "",
 					"insert_after": "purpose",
+					"hidden": 0,
+					"depends_on": "eval:doc.purpose == 'Material Receipt'",
+					"translatable": 0,
 				}
 			]
 		},
 		ignore_validate=True,
 		update=True,
+	)
+
+
+def tidy_stock_entry_rows():
+	"""Строка склада: порядок товар → склады → кол-во → цена → ед.изм. →
+	остальное как было, партия и серия в конце; ед.изм. видна в списке.
+	Мёртвый склад скрыт: у прихода нет отправителя, у списания нет получателя;
+	в комплектации направление задаёт заполненный склад (mutual exclusion).
+	Порядок — DocType-level field_order: meta.sort_fields перенумеровывает
+	пофилдовые idx и игнорирует такие сеттеры."""
+	order = [
+		"item_code",
+		"item_name",
+		"s_warehouse",
+		"t_warehouse",
+		"qty",
+		"basic_rate",
+		"uom",
+		"amount",
+		"conversion_factor",
+		"stock_uom",
+		"transfer_qty",
+		"batch_no",
+		"serial_no",
+	]
+	frappe.make_property_setter(
+		{
+			"doctype": "Books Stock Entry Detail",
+			"doctype_or_field": "DocType",
+			"property": "field_order",
+			"value": json.dumps(order),
+		},
+		validate_fields_for_doctype=False,
+	)
+	_setter(
+		"Books Stock Entry Detail",
+		"s_warehouse",
+		"depends_on",
+		"eval:parent.purpose != 'Material Receipt' && (parent.purpose != 'Repack' || !doc.t_warehouse || doc.s_warehouse)",
+		"Code",
+	)
+	_setter(
+		"Books Stock Entry Detail",
+		"t_warehouse",
+		"depends_on",
+		"eval:parent.purpose != 'Material Issue' && (parent.purpose != 'Repack' || !doc.s_warehouse || doc.t_warehouse)",
+		"Code",
 	)
