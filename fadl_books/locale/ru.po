@@ -11104,3 +11104,6 @@ msgstr "Перемещение"
 #: frontend/src/pages/FadlMore/FadlMorePage.vue
 msgid "Loans and Other"
 msgstr "Займы и прочее"
+
+msgid "Receipt Basis"
+msgstr "Основание прихода"
