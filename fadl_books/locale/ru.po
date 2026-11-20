@@ -5779,17 +5779,17 @@ msgstr "Справочники"
 #. Option for the 'Purpose' (Select) field in DocType 'Books Stock Entry'
 #: frappe_books/frappe_books/doctype/books_stock_entry/books_stock_entry.json:42
 msgid "Material Issue"
-msgstr "Выдача со склада"
+msgstr "Списание"
 
 #. Option for the 'Purpose' (Select) field in DocType 'Books Stock Entry'
 #: frappe_books/frappe_books/doctype/books_stock_entry/books_stock_entry.json:42
 msgid "Material Receipt"
-msgstr "Поступление на склад"
+msgstr "Оприходование"
 
 #. Option for the 'Purpose' (Select) field in DocType 'Books Stock Entry'
 #: frappe_books/frappe_books/doctype/books_stock_entry/books_stock_entry.json:42
 msgid "Material Transfer"
-msgstr "Перемещение между складами"
+msgstr "Перемещение"
 
 #: frappe_books/inventory/transaction.py:206
 msgid "Material transfers require both source and target warehouses."
@@ -11084,3 +11084,23 @@ msgstr "{0} · Строка {1}"
 msgid "{0}% off"
 msgstr "Скидка {0}%"
 
+#. Fadl More hub: named stock and journal operations
+#: frontend/src/pages/FadlMore/FadlMorePage.vue
+msgid "Opening Stock"
+msgstr "Начальный остаток"
+
+#: frontend/src/pages/FadlMore/FadlMorePage.vue
+msgid "Stock Surplus"
+msgstr "Оприходование излишков"
+
+#: frontend/src/pages/FadlMore/FadlMorePage.vue
+msgid "Stock Write-off"
+msgstr "Списание / недостача"
+
+#: frontend/src/pages/FadlMore/FadlMorePage.vue
+msgid "Stock Transfer"
+msgstr "Перемещение"
+
+#: frontend/src/pages/FadlMore/FadlMorePage.vue
+msgid "Loans and Other"
+msgstr "Займы и прочее"
