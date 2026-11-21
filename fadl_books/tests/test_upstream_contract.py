@@ -35,12 +35,16 @@ FRONTEND_MARKERS = {
 	),
 	"src/mobile/MobileTabs.vue": ("from './fadlTabs'",),
 	"src/router.ts": ("fadlRoutes",),
+	"src/pages/POS/MobilePOS.vue": ("FadlScanButton",),
 }
 FRONTEND_FILES = (
 	"src/pages/Dashboard/FadlPeriodSelector.vue",
 	"src/pages/Dashboard/FadlCustomCards.vue",
 	"src/mobile/fadlTabs.ts",
 	"src/pages/FadlMore/FadlMorePage.vue",
+	"src/mobile/scan/fadlScan.ts",
+	"src/mobile/scan/FadlScanOverlay.vue",
+	"src/mobile/scan/FadlScanButton.vue",
 )
 
 
