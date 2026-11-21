@@ -12,6 +12,7 @@ def execute():
 	tidy_date_fields()
 	add_stock_receipt_basis()
 	tidy_stock_entry_rows()
+	tidy_invoice_rows()
 	
 
 def setup_currency():
@@ -212,3 +213,41 @@ def tidy_stock_entry_rows():
 		"eval:parent.purpose != 'Material Issue' && (parent.purpose != 'Repack' || !doc.s_warehouse || doc.t_warehouse)",
 		"Code",
 	)
+
+
+def tidy_invoice_rows():
+	"""Строка счёта и предложения: товар → кол-во → цена → ед.изм. → коэффициент →
+	базовая ед.изм. → скидка % → скидка суммой → сумма → партия → серия,
+	остальное в конце в прежнем порядке.
+	Порядок — DocType-level field_order: meta.sort_fields перенумеровывает
+	пофилдовые idx и игнорирует такие сеттеры."""
+	priority = [
+		"item_code",
+		"qty",
+		"price_list_rate",
+		"uom",
+		"amount",
+		"conversion_factor",
+		"stock_uom",
+		"discount_percentage",
+		"discount_amount",
+		"batch_no",
+		"serial_no",
+	]
+	for doctype in (
+		"Books Sales Invoice Item",
+		"Books Purchase Invoice Item",
+		"Books Quotation Item",
+	):
+		fields = [df.fieldname for df in frappe.get_meta(doctype).fields]
+		head = [f for f in priority if f in fields]
+		order = head + [f for f in fields if f not in head]
+		frappe.make_property_setter(
+			{
+				"doctype": doctype,
+				"doctype_or_field": "DocType",
+				"property": "field_order",
+				"value": json.dumps(order),
+			},
+			validate_fields_for_doctype=False,
+		)
