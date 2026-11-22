@@ -10,7 +10,6 @@ def execute():
 	hide_tax_fields()
 	simplify_item_form()
 	tidy_date_fields()
-	add_stock_receipt_basis()
 	tidy_stock_entry_rows()
 	tidy_invoice_rows()
 	
@@ -136,36 +135,6 @@ def simplify_item_form():
 	_setter("Books Item", "taxes_section_break", "depends_on", "eval:0", "Code")
 	_setter("Books Item", "taxes", "hidden", 1, "Check")
 	_setter("Books Item", "item_code", "in_list_view", 1, "Check")
-
-def add_stock_receipt_basis():
-	"""Начальный остаток и излишки — оба Material Receipt. Селект называет, какой
-	именно приход: плитки фильтруют список и предзаполняют форму, ручной приход
-	по умолчанию считается излишком.
-
-	ignore_validate=True пропускает проверку меты при создании поля — иначе она
-	спотыкается о скрытый обязательный naming_series (наш hide_naming_series_fields).
-	Сам naming_series не трогаем."""
-	from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
-
-	create_custom_fields(
-		{
-			"Books Stock Entry": [
-				{
-					"fieldname": "receipt_basis",
-					"label": "Receipt Basis",
-					"fieldtype": "Select",
-					"options": "\nOpening Stock\nStock Surplus",
-					"default": "",
-					"insert_after": "purpose",
-					"hidden": 0,
-					"depends_on": "eval:doc.purpose == 'Material Receipt'",
-					"translatable": 0,
-				}
-			]
-		},
-		ignore_validate=True,
-		update=True,
-	)
 
 
 def tidy_stock_entry_rows():

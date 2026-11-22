@@ -11086,12 +11086,8 @@ msgstr "Скидка {0}%"
 
 #. Fadl More hub: named stock and journal operations
 #: frontend/src/pages/FadlMore/FadlMorePage.vue
-msgid "Opening Stock"
-msgstr "Начальный остаток"
-
-#: frontend/src/pages/FadlMore/FadlMorePage.vue
-msgid "Stock Surplus"
-msgstr "Оприходование излишков"
+msgid "Stock Receipt"
+msgstr "Оприходование"
 
 #: frontend/src/pages/FadlMore/FadlMorePage.vue
 msgid "Stock Write-off"
