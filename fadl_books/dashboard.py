@@ -8,6 +8,7 @@ GL = DocType("Books GL Entry")
 ACCOUNT = DocType("Books Account")
 SLE = DocType("Books Stock Ledger Entry")
 PE = DocType("Books Payment Entry")
+LOAN = DocType("Books Loan")
 
 
 @frappe.whitelist()
@@ -66,6 +67,14 @@ def _outstanding(doctype: str) -> dict:
 		.where(inv.outstanding_amount != 0)
 	)
 
+def _loan_outstanding(direction: str) -> dict:
+	return _totals(
+		frappe.qb.from_(LOAN)
+		.select(Sum(LOAN.outstanding_amount).as_("value"), Count(LOAN.name).as_("count"))
+		.where(LOAN.docstatus == 1)
+		.where(LOAN.direction == direction)
+		.where(LOAN.outstanding_amount != 0)
+	)
 
 def _gl_balance(from_date, to_date, credit_first=False, **account_filter) -> float:
 	expr = Sum(GL.credit) - Sum(GL.debit) if credit_first else Sum(GL.debit) - Sum(GL.credit)
@@ -188,3 +197,15 @@ def get_advances(period: str | None = None) -> dict:
 		.where(PE.docstatus == 1)
 		.where(PE.unallocated_amount != 0)
 	)
+
+
+@frappe.whitelist()
+def get_loans_given(period: str | None = None) -> dict:
+	"""Нам должны по займам: непогашенный остаток выданных займов (We Lend)."""
+	return _loan_outstanding("We Lend")
+
+
+@frappe.whitelist()
+def get_loans_taken(period: str | None = None) -> dict:
+	"""Мы должны по займам: непогашенный остаток привлечённых займов (We Borrow)."""
+	return _loan_outstanding("We Borrow")

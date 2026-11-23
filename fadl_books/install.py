@@ -1,6 +1,7 @@
 import json
 
 import frappe
+from frappe_books.coa import ensure_account
 
 
 def execute():
@@ -12,7 +13,18 @@ def execute():
 	tidy_date_fields()
 	tidy_stock_entry_rows()
 	tidy_invoice_rows()
-	
+	add_loan_accounts()
+	add_dashboard_cards()
+	rename_default_records()
+	setup_language()
+
+
+def add_loan_accounts():
+	"""Leaf accounts for loans, with no account_type so the journal may carry any party type.
+	The native helper is idempotent and makes the parent group when the chart has none."""
+	ensure_account("Loans Given", "Loans and Advances (Assets)", "Asset")
+	ensure_account("Loans Taken", "Loans (Liabilities)", "Liability")
+
 
 def setup_currency():
 	"""RUB is created at site install without a symbol, so set ₽ here."""
@@ -21,6 +33,13 @@ def setup_currency():
 	currency.fraction = "коп."
 	currency.symbol_on_right = 1
 	currency.save()
+
+
+def setup_language():
+	"""Russian is created at site install without a flag, so set 🇷🇺 here."""
+	language = frappe.get_doc("Language", "ru")
+	language.enabled = 1
+	language.save()
 
 
 def hide_naming_series_fields():
@@ -220,3 +239,139 @@ def tidy_invoice_rows():
 			},
 			validate_fields_for_doctype=False,
 		)
+
+
+# The dashboard card set in the user's priority order; titles as the dashboard shows them.
+DASHBOARD_CARDS = [
+	{
+		"title": "Продажи",
+		"color": "blue",
+		"metric_method": "fadl_books.dashboard.get_sales",
+		"route": "/list/SalesInvoice",
+	},
+	{
+		"title": "Валовая прибыль",
+		"color": "dynamic",
+		"metric_method": "fadl_books.dashboard.get_gross_profit",
+		"route": "/report/ProfitAndLoss",
+	},
+	{
+		"title": "Поступления",
+		"color": "green",
+		"metric_method": "fadl_books.dashboard.get_receipts",
+		"route": '/list/PaymentEntry?filters=[["payment_type","=","Receive"]]',
+	},
+	{
+		"title": "Остатки",
+		"color": "blue",
+		"metric_method": "fadl_books.dashboard.get_stock_balance",
+		"route": "/report/StockBalance",
+	},
+	{
+		"title": "Мы должны",
+		"color": "red",
+		"metric_method": "fadl_books.dashboard.get_payables",
+		"route": '/list/PurchaseInvoice?filters=[["docstatus","=",1],["outstanding_amount","!=",0]]',
+	},
+	{
+		"title": "Нам должны",
+		"color": "blue",
+		"metric_method": "fadl_books.dashboard.get_receivables",
+		"route": '/list/SalesInvoice?filters=[["docstatus","=",1],["outstanding_amount","!=",0]]',
+	},
+	{
+		"title": "Расходы",
+		"color": "orange",
+		"metric_method": "fadl_books.dashboard.get_expenses",
+		"route": "/report/ProfitAndLoss",
+	},
+	{
+		"title": "Выплаты",
+		"color": "orange",
+		"metric_method": "fadl_books.dashboard.get_payments",
+		"route": '/list/PaymentEntry?filters=[["payment_type","=","Pay"]]',
+	},
+	{
+		"title": "Закупки",
+		"color": "orange",
+		"metric_method": "fadl_books.dashboard.get_purchases",
+		"route": "/list/PurchaseInvoice",
+	},
+	{
+		"title": "Авансы",
+		"color": "gray",
+		"metric_method": "fadl_books.dashboard.get_advances",
+		"route": '/list/PaymentEntry?filters=[["docstatus","=",1],["unallocated_amount","!=",0]]',
+	},
+	{
+		"title": "Займы: нам должны",
+		"color": "blue",
+		"metric_method": "fadl_books.dashboard.get_loans_given",
+		"route": '/list/FadlLoan?filters=[["docstatus","=",1],["direction","=","We Lend"],["outstanding_amount","!=",0]]',
+	},
+	{
+		"title": "Займы: мы должны",
+		"color": "orange",
+		"metric_method": "fadl_books.dashboard.get_loans_taken",
+		"route": '/list/FadlLoan?filters=[["docstatus","=",1],["direction","=","We Borrow"],["outstanding_amount","!=",0]]',
+	},
+	{
+		"title": "Переводы",
+		"color": "gray",
+		"metric_method": "fadl_books.dashboard.get_transfers",
+		"route": '/list/PaymentEntry?filters=[["payment_type","=","Internal Transfer"]]',
+	},
+	{
+		"title": "Движения товаров",
+		"color": "gray",
+		"metric_method": "fadl_books.dashboard.get_stock_movements",
+		"route": "/report/StockLedger",
+	},
+]
+
+
+def add_dashboard_cards():
+	"""The dashboard card set, recreated after a reinstall wipes the site's data.
+	Idempotent by metric_method: existing rows keep their values, missing ones are
+	appended; when anything was added the default set takes its priority order again."""
+	settings = frappe.get_single("Books Dashboard Settings")
+	existing = {row.metric_method for row in settings.cards}
+	changed = False
+	for card in DASHBOARD_CARDS:
+		if card["metric_method"] not in existing:
+			settings.append("cards", dict(card, enabled=1))
+			changed = True
+	# Loans are separate cards now — the old one keeps only advances.
+	for row in settings.cards:
+		if row.metric_method == "fadl_books.dashboard.get_advances" and row.title == "Займы и авансы":
+			row.title = "Авансы"
+			changed = True
+	if changed:
+		order = {card["metric_method"]: i for i, card in enumerate(DASHBOARD_CARDS)}
+		settings.cards.sort(key=lambda row: order.get(row.metric_method, len(order)))
+		for idx, row in enumerate(settings.cards, start=1):
+			row.idx = idx
+		settings.save()
+
+
+# Setup seeds English UOMs and the Stores warehouse; the shop works in Russian.
+DEFAULT_RENAMES = {
+	"Books UOM": {
+		"Unit": "Шт",
+		"Kg": "Кг",  # noqa: RUF001 -- Cyrillic UOM name, intentional
+		"Gram": "Грамм",
+		"Meter": "Метр",
+		"Hour": "Час",
+		"Day": "День",
+	},
+	"Books Warehouse": {"Stores": "Магазин"},
+}
+
+
+def rename_default_records():
+	"""These are records, not labels: property setters cannot rename them.
+	rename_doc relinks every document; skipped once renamed or if the target exists."""
+	for doctype, names in DEFAULT_RENAMES.items():
+		for old, new in names.items():
+			if frappe.db.exists(doctype, old) and not frappe.db.exists(doctype, new):
+				frappe.rename_doc(doctype, old, new)

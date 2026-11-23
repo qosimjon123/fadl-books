@@ -36,6 +36,11 @@ FRONTEND_MARKERS = {
 	"src/mobile/MobileTabs.vue": ("from './fadlTabs'",),
 	"src/router.ts": ("fadlRoutes",),
 	"src/pages/POS/MobilePOS.vue": ("FadlScanButton",),
+	"models/index.ts": (
+		"import { FadlLoan } from './baseModels/FadlLoan/FadlLoan'",
+		"FadlLoanRepayment,",
+	),
+	"src/utils/sidebarConfig.ts": ("route: '/list/FadlLoan'",),
 }
 FRONTEND_FILES = (
 	"src/pages/Dashboard/FadlPeriodSelector.vue",
@@ -45,6 +50,8 @@ FRONTEND_FILES = (
 	"src/mobile/scan/fadlScan.ts",
 	"src/mobile/scan/FadlScanOverlay.vue",
 	"src/mobile/scan/FadlScanButton.vue",
+	"models/baseModels/FadlLoan/FadlLoan.ts",
+	"models/baseModels/FadlLoan/FadlLoanRepayment.ts",
 )
 
 
@@ -63,6 +70,11 @@ class IntegrationTestUpstreamContract(IntegrationTestCase):
 	def test_native_helpers_and_constants_exist(self):
 		for name in NATIVE_HELPERS:
 			self.assertTrue(hasattr(native, name), f"frappe_books.reports.dashboard.{name} is gone")
+
+	def test_native_account_helper_exists(self):
+		from frappe_books import coa
+
+		self.assertTrue(hasattr(coa, "ensure_account"), "frappe_books.coa.ensure_account is gone")
 
 	def test_native_period_keys_still_resolve(self):
 		with self.freeze_time(FRIDAY):

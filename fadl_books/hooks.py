@@ -108,7 +108,7 @@ use_json_request_body = True
 # ------------
 
 # before_install = "fadl_books.install.before_install"
-after_install = "fadl_books.install.execute"
+# after_install = "fadl_books.install.execute"
 
 # Uninstallation
 # ------------
@@ -237,6 +237,9 @@ override_whitelisted_methods = {
 	"frappe_books.reports.dashboard.get_profit_and_loss": "fadl_books.dashboard_overrides.get_profit_and_loss",
 	"frappe_books.reports.dashboard.get_top_expenses": "fadl_books.dashboard_overrides.get_top_expenses",
 	"frappe_books.reports.dashboard.get_invoice_summary": "fadl_books.dashboard_overrides.get_invoice_summary",
+	# The Books frontend builds mapper paths as frappe_books.<module>.doctype...;
+	# Books Loan lives in fadl_books, so its synthetic path routes to the real mapper.
+	"frappe_books.fadl_books.doctype.books_loan.books_loan.make_repayment": "fadl_books.fadl_books.doctype.books_loan.books_loan.make_repayment",
 }
 
 # each overriding function accepts a `data` argument;

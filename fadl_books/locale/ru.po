@@ -11103,3 +11103,77 @@ msgstr "Займы и прочее"
 
 msgid "Receipt Basis"
 msgstr "Основание прихода"
+
+#. Fadl Loans: the loan doctypes, their actions and accounts
+#: fadl_books/fadl_books/doctype/books_loan/books_loan.json
+msgid "Loan"
+msgstr "Заём"
+
+#: frontend/src/utils/sidebarConfig.ts
+msgid "Loans"
+msgstr "Займы"
+
+#: fadl_books/fadl_books/doctype/books_loan_repayment/books_loan_repayment.json
+msgid "Loan Repayment"
+msgstr "Погашение займа"
+
+#: frontend/models/baseModels/FadlLoan/FadlLoan.ts
+msgid "Repay"
+msgstr "Погасить"
+
+msgid "Direction"
+msgstr "Направление"
+
+msgid "We Lend"
+msgstr "Долг нам"
+
+msgid "We Borrow"
+msgstr "Наш долг"
+
+msgid "Remark"
+msgstr "Комментарий"
+
+msgid "Loans Given"
+msgstr "Выданные займы"
+
+msgid "Loans Taken"
+msgstr "Полученные займы"
+
+msgid "Amount must be greater than zero."
+msgstr "Сумма должна быть больше нуля."
+
+msgid "Only a submitted loan can be repaid."
+msgstr "Погасить можно только проведённый заём."
+
+msgid "Amount exceeds the loan's outstanding amount."
+msgstr "Сумма превышает остаток долга по займу."
+
+msgid "Cancel this loan's repayments first."
+msgstr "Сначала отмените погашения этого займа."
+
+#, python-brace-format
+msgid "Loan {0} is already repaid."
+msgstr "Заём {0} уже погашен."
+
+#, python-brace-format
+msgid "Set a default account for mode of payment {0}."
+msgstr "Укажите счёт по умолчанию для способа оплаты {0}."
+
+#. Status badge of a loan list row: fully repaid
+#: frontend/models/baseModels/FadlLoan/FadlLoan.ts
+msgid "Repaid"
+msgstr "Погашен"
+
+msgid "Partially repaid"
+msgstr "Частично погашен"
+
+#. Linked repayments section of the loan form
+#: frontend/models/baseModels/FadlLoan/FadlLoan.ts
+msgid "Loan Repayments"
+msgstr "Погашения"
+
+msgid "Add repayment"
+msgstr "Добавить погашение"
+
+msgid "No repayments"
+msgstr "Нет погашений"
