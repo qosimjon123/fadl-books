@@ -36,11 +36,11 @@ FRONTEND_MARKERS = {
 	"src/mobile/MobileTabs.vue": ("from './fadlTabs'",),
 	"src/router.ts": ("fadlRoutes",),
 	"src/pages/POS/MobilePOS.vue": ("FadlScanButton",),
-	"models/index.ts": (
-		"import { FadlLoan } from './baseModels/FadlLoan/FadlLoan'",
-		"FadlLoanRepayment,",
-	),
-	"src/utils/sidebarConfig.ts": ("route: '/list/FadlLoan'",),
+	"models/index.ts": ("...fadlModels,",),
+	"src/utils/sidebarConfig.ts": ("...getFadlCommonItems(),",),
+	"src/pages/POS/POS.vue": ("FadlPOSFilter",),
+	"src/utils/sheetFields.ts": ("orderByMeta(",),
+	"src/pages/CommonForm/MobileFormSection.vue": ("fadl: ru",),
 }
 FRONTEND_FILES = (
 	"src/pages/Dashboard/FadlPeriodSelector.vue",
@@ -52,6 +52,11 @@ FRONTEND_FILES = (
 	"src/mobile/scan/FadlScanButton.vue",
 	"models/baseModels/FadlLoan/FadlLoan.ts",
 	"models/baseModels/FadlLoan/FadlLoanRepayment.ts",
+	"models/fadlModels.ts",
+	"src/utils/fadlSidebarItems.ts",
+	"src/fadlRoutes.ts",
+	"src/utils/fadlRowOrder.ts",
+	"src/pages/POS/FadlPOSFilter.vue",
 )
 
 
