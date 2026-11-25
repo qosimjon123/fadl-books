@@ -15,7 +15,6 @@ def execute():
 	tidy_invoice_rows()
 	add_loan_accounts()
 	add_dashboard_cards()
-	rename_default_records()
 	setup_language()
 
 
@@ -352,26 +351,3 @@ def add_dashboard_cards():
 		for idx, row in enumerate(settings.cards, start=1):
 			row.idx = idx
 		settings.save()
-
-
-# Setup seeds English UOMs and the Stores warehouse; the shop works in Russian.
-DEFAULT_RENAMES = {
-	"Books UOM": {
-		"Unit": "Шт",
-		"Kg": "Кг",  # noqa: RUF001 -- Cyrillic UOM name, intentional
-		"Gram": "Грамм",
-		"Meter": "Метр",
-		"Hour": "Час",
-		"Day": "День",
-	},
-	"Books Warehouse": {"Stores": "Магазин"},
-}
-
-
-def rename_default_records():
-	"""These are records, not labels: property setters cannot rename them.
-	rename_doc relinks every document; skipped once renamed or if the target exists."""
-	for doctype, names in DEFAULT_RENAMES.items():
-		for old, new in names.items():
-			if frappe.db.exists(doctype, old) and not frappe.db.exists(doctype, new):
-				frappe.rename_doc(doctype, old, new)
